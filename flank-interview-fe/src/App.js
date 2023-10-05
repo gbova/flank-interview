@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './app.scss';
+import './button.scss'
 import ThinTemplate from './templates/ThinTemplate/thin-template';
 import ReactMarkdown from 'react-markdown';
 import objective from './objective.js';
@@ -17,6 +18,17 @@ const options = [
 
 function App() {
     const [selected, setSelected] = useState([]);
+
+    function updateButtonStyle(selectedOptions) {
+        selectedOptions.forEach((option) =>
+            document.getElementById(option.label).style.backgroundColor = '#A0A1A2'
+        );
+
+        const deselectedOptions = options.filter(o => !selectedOptions.includes(o));
+        deselectedOptions.forEach((option) =>
+            document.getElementById(option.label).style.backgroundColor = 'white'
+        );
+    }
 
     function selectRangeOfOptions(selectedOptions) {
         if (selectedOptions.length <= 1) {
@@ -54,6 +66,9 @@ function App() {
             updatedSelected = selectRangeOfOptions([...updatedSelected, option])
         }
         setSelected(updatedSelected);
+
+        // Update UI: set updatedSelected to 'selected' and set all others to 'deselected'
+        updateButtonStyle(updatedSelected);
     }
 
     return (
@@ -63,6 +78,7 @@ function App() {
                     <button
                         type='button'
                         key={option.value}
+                        id={option.label}
                         onClick={() => buttonClicked(option)}
                     >
                         {option.label}
